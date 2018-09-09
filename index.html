@@ -12,14 +12,16 @@
 <body>
   <header>
     <nav>
-      <h1><a href="/">Restaurant Reviews</a></h1>
+      <h1><a href="/" tabindex="1">Restaurant Reviews</a></h1>
     </nav>
   </header>
 
   <main id="maincontent">
-    <section id="map-container">
-      <div id="map"></div>
+    <section id="map-container" aria-hidden="true" aria-labelledby="map-label">
+      <div id="map" aria-hidden="true" role="application"></div>
+      <label id="map-label" style="display: none;">Interactive Map</label>
     </section>
+
     <section>
       <div class="filter-options">
         <h2>Filter Results</h2>

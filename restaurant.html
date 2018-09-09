@@ -16,7 +16,7 @@
   <header>
     <!-- Beginning nav -->
     <nav>
-      <h1><a href="/">Restaurant Reviews</a></h1>
+      <h1><a href="/" tabindex="1">Restaurant Reviews</a></h1>
     </nav>
     <!-- Beginning breadcrumb -->
     <ul id="breadcrumb" >
@@ -31,23 +31,31 @@
   <main id="maincontent">
     <!-- Beginning restaurant -->
     <section id="restaurant-container">
-      <h1 id="restaurant-name"></h1>
-      <img id="restaurant-img" alt="Restaurant Image">
+      <h2 id="restaurant-name"></h2>
+      <img id="restaurant-img">
       <p id="restaurant-cuisine"></p>
     </section>
+    
     <section id="restaurant-address-map-hours">
-      <p id="restaurant-address"></p>
-      <!-- end restaurant --><!-- Beginning map -->
-      <section id="map-container">
-        <div id="map"></div>
+      <p id="restaurant-address" aria-labelledby="address-label"></p>
+      <label id="address-label" style="display: none;">Restaurant Address</label>
+      <!-- end restaurant -->
+      
+      <!-- Beginning map -->
+      <section id="map-container" aria-labelledby="map-label" role="application" aria-hidden="true">
+        <div id="map" aria-hidden="true"></div>
       </section>
+      <label id="map-label" style="display: none;">Interactive Map</label>
       <!-- End map -->
+      
       <div class="hours">
-      <table id="restaurant-hours"></table>
+      <table id="restaurant-hours" aria-labelledby="hours-label"></table>
+      <label id="hours-label" style="display: none;">Restaurant Hours</label>
       </div>
     </section>
     <!-- Beginning reviews -->
-    <section id="reviews-container">
+    <section id="reviews-container" aria-labelledby="reviews-label">
+      <label id="reviews-label" style="display: none;"> Restaurant Reviews Section</label>
       <ul id="reviews-list"></ul>
     </section>
     <!-- End reviews -->

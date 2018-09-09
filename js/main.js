@@ -76,7 +76,7 @@ initMap = () => {
         center: [40.722216, -73.987501],
         zoom: 12,
         scrollWheelZoom: false
-      });
+      });   
   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
     mapboxToken: 'pk.eyJ1IjoiY2FybG90ZXJhbjE5IiwiYSI6ImNqa3Q3d2lhMjAzY2wzd3JuZ3Y0YXcyNTEifQ.B8hQ6gETM1VlagvFxYloTw',
     maxZoom: 18,
@@ -163,11 +163,12 @@ createRestaurantHTML = (restaurant) => {
   const imageRestaurant = DBHelper.imageUrlForRestaurant(restaurant);
   const imageSplit = imageRestaurant.split('.');
   const imageSmall = imageSplit[0] + '_1x.' + imageSplit[1];
-  /*image.src = DBHelper.imageUrlForRestaurant(restaurant);*/
   image.src = imageSmall;
+  image.alt = restaurant.name + " restaurant facility"
   li.append(image);
-
-  const name = document.createElement('h1');
+  
+  /*Change h1 to h2 for better Semantics*/
+  const name = document.createElement('h2');
   name.innerHTML = restaurant.name;
   li.append(name);
 
@@ -179,9 +180,12 @@ createRestaurantHTML = (restaurant) => {
   address.innerHTML = restaurant.address;
   li.append(address);
 
-  const more = document.createElement('a');
+  /* Change a to button for accesibility */
+  const more = document.createElement('button');
   more.innerHTML = 'View Details';
-  more.href = DBHelper.urlForRestaurant(restaurant);
+  more.onclick = function() {
+    window.location = DBHelper.urlForRestaurant(restaurant);
+  }
   li.append(more)
 
   return li
