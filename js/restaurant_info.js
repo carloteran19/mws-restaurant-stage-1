@@ -90,8 +90,8 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   image.className = 'restaurant-img';
   const imageRestaurant = DBHelper.imageUrlForRestaurant(restaurant);
   const imageSplit = imageRestaurant.split('.');
-  const imageSmall = imageSplit[0] + '_1x.' + imageSplit[1];
-  const imageLarge = imageSplit[0] + '_2x.' + imageSplit[1];;
+  const imageSmall = imageSplit[0] + '_1x.jpg';
+  const imageLarge = imageSplit[0] + '_2x.jpg';
   /*image.src = DBHelper.imageUrlForRestaurant(restaurant);*/
   image.src = imageSmall;
   image.alt = restaurant.name + " restaurant facility"
