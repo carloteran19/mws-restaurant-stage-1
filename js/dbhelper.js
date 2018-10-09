@@ -1,6 +1,7 @@
 /**
  * Common database helper functions.
  */
+
 class DBHelper {
 
   /**
@@ -13,43 +14,69 @@ class DBHelper {
   }
 
   /**
+   * Setup IDB
+   */
+  
+   // Create IDB with 'restaurants' object store = restaurantsTable 
+
+  static idbSetup() { 
+    return idb.open('mws-restaurant-reviews', 1, function(upgradeDb) {
+      switch(upgradeDb.oldVersion){
+        case 0:
+        var restaurantTable = upgradeDb.createObjectStore('restaurants', { keyPath: 'id'});
+        case 1:
+        // In case I need to create another ObjectStore 
+      }
+    });
+  }
+  
+  // Fetch Restaurants and Store them on IDB
+
+  static GetAndPutRestaurants() {
+    let fetchURL = DBHelper.DATABASE_URL; 
+
+    return fetch(fetchURL)
+      .then(response => response.json())
+      .then(restaurants => {
+        return DBHelper.idbSetup()
+          .then(db => {
+            var tx = db.transaction('restaurants', 'readwrite');
+            var restaurantTable = tx.objectStore('restaurants');
+            restaurants.forEach(restaurant => {
+              restaurantTable.put(restaurant)
+            })
+            return tx.complete.then(() => Promise.resolve(restaurants));
+          });
+      });
+  }
+  
+  /**
    * Fetch all restaurants.
    */
   
   static fetchRestaurants(callback) {
-    let fetchURL = DBHelper.DATABASE_URL; 
-  
-    fetch(fetchURL, {
-      method: "GET"
-      }).then(response => {
-      response.json().then(restaurants => {
+   
+    // Get restaurants from IDB 
+    return DBHelper.idbSetup() 
+      .then(db => {
+        var tx = db.transaction('restaurants');
+        var restaurantTable = tx.objectStore('restaurants');
+        return restaurantTable.getAll(); 
+      })
+      .then(restaurants => {
+        if (restaurants.length) {
+          return Promise.resolve(restaurants); //If Restaurants exist on IDB return them.
+        }
+        return DBHelper.GetAndPutRestaurants(); //IF IDB is empty, Fetch them and Store them
+      })
+      .then(restaurants => {
         callback(null, restaurants);
-        });
       })
       .catch(error => {
-        const message = (`Request failed. Returned status of ${error.message}`);
-        callback(message, null);
-    });
-  }
+        callback(error, null)
+      })
+  }    
     
-  /*
-   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
-  }
-  */
-  
   /**
    * Fetch a restaurant by its ID.
    */
@@ -169,7 +196,7 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    return (`/img/${restaurant.id}`);
   }
 
   /**
