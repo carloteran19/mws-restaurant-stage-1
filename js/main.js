@@ -179,8 +179,45 @@ createRestaurantHTML = (restaurant) => {
   const address = document.createElement('p');
   address.innerHTML = restaurant.address;
   li.append(address);
+  
+  /* Create Like button */
+  const like = document.createElement('button');
+  like.innerHTML = '👍 Like';
+  like.classList.add("btn_like");
 
-  /* Change a to button for accesibility */
+  like.onclick = function(){
+    // Change favorite status (is_favorite) on DB
+    const liked = !restaurant.is_favorite;
+    DBHelper.likeRestaurant(restaurant.id, liked);
+    // Change button color on UI
+    restaurant.is_favorite = !restaurant.is_favorite
+    changeLikeButton(like, restaurant.is_favorite)
+  };
+  
+  //Change button color on UI function
+  changeLikeButton = (button, liked) => {
+    if (liked) {
+      button.classList.remove('btn_like');
+      button.classList.add('btn_liked');
+      var label_like = document.createAttribute("aria-label");
+      label_like.value = "unlike " + restaurant.name;
+      button.setAttributeNode(label_like);
+    } 
+    else {
+      button.classList.remove('btn_liked');
+      button.classList.add('btn_like');
+      var label_like = document.createAttribute("aria-label");
+      label_like.value = "like " + restaurant.name;
+      button.setAttributeNode(label_like);
+    }
+  }
+  
+  //Insert Button with button class based on is_favorite status
+  changeLikeButton(like, restaurant.is_favorite);
+  li.append(like);
+  
+
+  /* Details button */
   const more = document.createElement('button');
   var label_att = document.createAttribute("aria-label");
   label_att.value = restaurant.name + " details";
@@ -190,7 +227,7 @@ createRestaurantHTML = (restaurant) => {
   more.onclick = function() {
     window.location = DBHelper.urlForRestaurant(restaurant);
   }
-  li.append(more)
+  li.append(more);
 
   return li
 }

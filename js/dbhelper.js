@@ -75,7 +75,27 @@ class DBHelper {
       .catch(error => {
         callback(error, null)
       })
-  }    
+  }
+
+   /**
+   * Update Restaurant status.
+   */ 
+  static likeRestaurant(restaurant, status) {
+    console.log('changing status', status);
+
+    fetch(`http://localhost:1337/restaurants/${restaurant}/?is_favorite=${status}`, {
+      method: 'PUT'
+    }).then(() => {
+      DBHelper.idbSetup().then(db => {
+        var tx = db.transaction('restaurants', 'readwrite');
+        var restaurantTable = tx.objectStore('restaurants');
+        restaurantTable.get(restaurant).then(restaurant => {
+          restaurant.is_favorite = status;
+          restaurantTable.put(restaurant);
+        }); 
+      })
+    })
+  }
     
   /**
    * Fetch a restaurant by its ID.

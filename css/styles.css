@@ -245,7 +245,7 @@ nav h1 a {
 
 #restaurants-list li button {
   background-color: #29aecf;
-  border: none;
+  border-style: solid;
   color: #fff;
   font-size: 1.2rem;
   margin: 1.5rem 0 0;
@@ -254,6 +254,21 @@ nav h1 a {
   display: inline-block;
   text-decoration: none;
   text-transform: uppercase;
+}
+
+button:focus {outline:0;}
+
+.btn_like {
+  background-color: white !important;
+  color: gray !important;
+  font-size: 1.05rem !important;
+}
+
+.btn_liked {
+  background-color: white !important;
+  color: #29aecf !important;
+  font-size: 1.05rem !important;
+  font-weight: bold; 
 }
 
 /* ====================== Restaurant Details ====================== */
