@@ -4,17 +4,16 @@ self.addEventListener('install', function(event) {
     event.waitUntil(
         caches.open(staticCacheName).then(function(cache) {
             return cache.addAll([
-                '.index.html',
-                '.restaurant.html',
-                '.manifest.json',
-                './css/styles.css',
-                './data/restaurants.json',
-                './js/dbhelper.js',
-                './js/idb.js',
-                './js/main.js',
-                './js/restaurant_info.js',
-                './img/*',
-                './js/register.js'
+                'index.html',
+                'restaurant.html',
+                'manifest.json',
+                '/css/styles.css',
+                '/js/dbhelper.js',
+                '/js/idb.js',
+                '/js/main.js',
+                '/js/restaurant_info.js',
+                '/img',
+                '/js/register.js'
             ]).catch(error => {
               console.log('Caches failed' + error);
             });
@@ -37,9 +36,19 @@ self.addEventListener('activate', function(event){
     );
 })
 
+// The PUT method was failing using the previous method. I will use the following
+// https://developers.google.com/web/ilt/pwa/caching-files-with-service-worker
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request).then(function(response) {
+      return response || fetch(event.request);
+    })
+  );
+});
+
 //Cache any new resources as they are fetched 
 //This was taken from Progressive Web Apps by Dean Alan Hume page. 44
-
+/*
 self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request, { ignoreSearch: true })
@@ -64,3 +73,4 @@ self.addEventListener('fetch', event => {
         })
     );
 });
+*/ 

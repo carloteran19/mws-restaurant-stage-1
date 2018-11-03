@@ -18,14 +18,16 @@ class DBHelper {
    */
   
    // Create IDB with 'restaurants' object store = restaurantsTable 
+   // Create Reviews object store = reviewsTable
 
   static idbSetup() { 
-    return idb.open('mws-restaurant-reviews', 1, function(upgradeDb) {
+    return idb.open('mws-restaurant-reviews', 2, function(upgradeDb) {
       switch(upgradeDb.oldVersion){
         case 0:
         var restaurantTable = upgradeDb.createObjectStore('restaurants', { keyPath: 'id'});
         case 1:
-        // In case I need to create another ObjectStore 
+        const reviewsTable = upgradeDb.createObjectStore('reviews', {keyPath: 'id'});
+        reviewsTable.createIndex('restaurant', 'restaurant_id'); 
       }
     });
   }
@@ -49,13 +51,11 @@ class DBHelper {
           });
       });
   }
-  
+ 
   /**
    * Fetch all restaurants.
    */
-  
   static fetchRestaurants(callback) {
-   
     // Get restaurants from IDB 
     return DBHelper.idbSetup() 
       .then(db => {
@@ -75,6 +75,44 @@ class DBHelper {
       .catch(error => {
         callback(error, null)
       })
+  }
+  
+  /**
+   * Fetch Restaurant Reviews.
+   */
+  static fetchReviewsByRestaurantId(id) {
+    return fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`).then(response => {
+      return response.json();
+    }).then(reviews => {
+      //If succesfully fetched: Store on idb
+     this.idbSetup().then(db => {
+       if (!db) return;
+
+       var tx = db.transaction('reviews', 'readwrite');
+       const store = tx.objectStore('reviews');
+       if (Array.isArray(reviews)) {
+         reviews.forEach(function(review) {
+           store.put(review);
+         });
+       } else {
+         store.put(reviews);
+       }
+     });
+     return Promise.resolve(reviews);
+    
+     //if offline or there is some network error
+    }).catch(networkError => {
+      //get reviews from idb
+      return this.idbSetup().then(function(db) {
+        if (!db) return; 
+
+        const storeObject = db.transaction('reviews').objectStore('reviews');
+        const indexId = storeObject.index('restaurant');
+        return indexId.getAll(id);
+      }).then((storedReviews) => {
+        return Promise.resolve(storedReviews);   
+      }) 
+    });
   }
 
    /**
@@ -204,7 +242,7 @@ class DBHelper {
       }
     });
   }
-
+  
   /**
    * Restaurant page URL.
    */
