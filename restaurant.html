@@ -55,6 +55,41 @@
       <label id="hours-label" style="display: none;">Restaurant Hours</label>
       </div>
     </section>
+    
+    <!-- Beginning form reviews section-->
+    <section id="reviews-form-container" aria-labelledby="reviews-form-label">
+      <label id="reviews-form-label" style="display: none;">Add Review</label>
+      <h2>Add Review</h2>
+
+      <!--Add Review Form-->
+      <div class="reviews-form">
+        <form>
+          <label for="name">Name</label>
+          <input name="name" type="text" aria-labelledby="review-form-name-label"/>
+          <label id="reviews-form-name-label" style="display: none;">Name</label>
+          
+          <label for="rating">Rating:</label>
+          <select name="rating" aria-labelledby="review-form-select-rating-label">
+          <label id="review-form-select-rating-label" style="display: none;">Select Rating</label>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+  
+          <label for="comments">Comments:</label>
+          <textarea name="comments" aria-labelledby="review-form-comments-label"></textarea>
+          <label id="review-form-comments-label" style="display: none;">Comments</label>
+          
+          <button id="submit-review-button" aria-labelledby="review-form-submit" onclick="addReview()">Submit</button>
+          <label id="review-form-submit" style="display: none;">Submit</label>
+        </form>
+      </div>
+      <!--End Add Review Form-->
+    </section>
+    <!-- End form reviews section-->
+
     <!-- Beginning reviews -->
     <section id="reviews-container" aria-labelledby="reviews-label">
       <label id="reviews-label" style="display: none;"> Restaurant Reviews Section</label>

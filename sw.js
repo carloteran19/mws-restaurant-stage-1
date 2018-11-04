@@ -1,4 +1,4 @@
-var staticCacheName = 'mws-static-v2';
+var staticCacheName = 'mws-static-v1';
 
 self.addEventListener('install', function(event) {
     event.waitUntil(
