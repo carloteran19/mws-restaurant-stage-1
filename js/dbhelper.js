@@ -114,6 +114,29 @@ class DBHelper {
       }) 
     });
   }
+  
+  /**
+   * Add New Review to DB.
+   */
+  static addReview(review) {
+    //User is able to add a review to a restaurant while offline. 
+    //Review is sent to the server when connectivity is re-established
+    
+    //Form submission works properly and adds a new review to the DB
+    //Prepare Fetch with proper settings
+    const fetch_settings = {
+      method: 'POST',
+      body: JSON.stringify(review)
+    };
+    
+    //Fetch POST review to Server
+    fetch(`http://localhost:1337/reviews/`, fetch_settings).then(response => {
+      if (!response.ok) {
+        return response.json();
+      } else { return 'Review Added to DB'}})
+      .then((data) => {console.log(`Fetch succesful!`)})
+      .catch(error => console.log('error:', error));
+  }
 
    /**
    * Update Restaurant status.

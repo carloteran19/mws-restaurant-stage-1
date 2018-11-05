@@ -151,6 +151,44 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 }
 
 /**
+ * Add new review from Form to DB 
+ */
+
+ //Logic and concepts taken from Elisa Romondia and Lorenzo Zaccagnini on the MWS Webinar part 3: https://www.youtube.com/watch?v=XbCwxeCqxw4&t=446s
+addReview = () => {
+  event.preventDefault();
+  // Get data from Form
+  let restaurantId = getParameterByName('id');
+  let name = document.getElementById('name').value;
+  let rating = document.querySelector('#rating option:checked').value;
+  let comments = document.getElementById('comments').value;
+  const review = [name, rating, comments, restaurantId]; 
+
+  //Create New Review object
+  const newReview = {
+    restaurant_id: parseInt(review[3]),
+    name: review[0],
+    rating: parseInt(review[1]),
+    comments: review[2].substring(0, 300),
+    createdAt: new Date().toISOString()
+  };
+
+  //Send review object to DB
+  DBHelper.addReview(newReview);
+  //Insert new review to reviews list
+  addNewReviewHTML(newReview);
+  //Clear form data
+  document.getElementById('reviewForm').reset();
+}
+
+addNewReviewHTML = (review) => {
+  const container = document.getElementById('reviews-container');
+  const ul = document.getElementById('reviews-list');
+  ul.insertBefore(createReviewHTML(review), ul.firstChild);
+  container.appendChild(ul);
+}
+
+/**
  * Create review HTML and add it to the webpage.
  */
 createReviewHTML = (review) => {

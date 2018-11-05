@@ -63,13 +63,13 @@
 
       <!--Add Review Form-->
       <div class="reviews-form">
-        <form>
+        <form id="reviewForm">
           <label for="name">Name</label>
-          <input name="name" type="text" aria-labelledby="review-form-name-label"/>
+          <input id="name" name="name" type="text" aria-labelledby="review-form-name-label" required/>
           <label id="reviews-form-name-label" style="display: none;">Name</label>
           
           <label for="rating">Rating:</label>
-          <select name="rating" aria-labelledby="review-form-select-rating-label">
+          <select id="rating" name="rating" aria-labelledby="review-form-select-rating-label">
           <label id="review-form-select-rating-label" style="display: none;">Select Rating</label>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -79,7 +79,7 @@
           </select>
   
           <label for="comments">Comments:</label>
-          <textarea name="comments" aria-labelledby="review-form-comments-label"></textarea>
+          <textarea id="comments" name="comments" aria-labelledby="review-form-comments-label" required></textarea>
           <label id="review-form-comments-label" style="display: none;">Comments</label>
           
           <button id="submit-review-button" aria-labelledby="review-form-submit" onclick="addReview()">Submit</button>
