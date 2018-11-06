@@ -172,9 +172,15 @@ addReview = () => {
     comments: review[2].substring(0, 300),
     createdAt: new Date().toISOString()
   };
+  
+  //Register BackgroundSync
+  navigator.serviceWorker.ready.then(reg => reg.sync.register("sync-review"));
+  
+  // Get the payload of data from the page and save to an indexedDB
+  idbKeyval.set('sendReview', newReview);
 
   //Send review object to DB
-  DBHelper.addReview(newReview);
+  //DBHelper.addReview(newReview);
   //Insert new review to reviews list
   addNewReviewHTML(newReview);
   //Clear form data

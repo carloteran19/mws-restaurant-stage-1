@@ -9,6 +9,7 @@ self.addEventListener('install', function(event) {
                 'manifest.json',
                 '/css/styles.css',
                 '/js/dbhelper.js',
+                '/js/idb-keyval.js',
                 '/js/idb.js',
                 '/js/main.js',
                 '/js/restaurant_info.js',
@@ -35,6 +36,22 @@ self.addEventListener('activate', function(event){
       })
     );
 })
+
+// taken from Progressive Web Apps by Dean Alan Hume
+// Add an event listener to the sync event
+importScripts('/js/idb-keyval.js');
+self.addEventListener('sync', (event) => {
+    if (event.tag == 'sync-review') {
+        event.waitUntil (
+            idbKeyval.get('sendReview').then(value =>
+                fetch(`http://localhost:1337/reviews/`, {
+                    method: 'POST',
+                    headers: new Headers({ 'content-type': 'application/json' }),
+                    body: JSON.stringify(value)
+                })));
+            idbKeyval.del('sendReview');
+    }
+});
 
 // The PUT method was failing using the previous method. I will use the following
 // https://developers.google.com/web/ilt/pwa/caching-files-with-service-worker
